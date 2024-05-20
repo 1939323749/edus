@@ -1,11 +1,13 @@
 package ui.admin
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import compose.icons.TablerIcons
 import compose.icons.tablericons.Plus
 import data.datasource.RemoteDataSource
@@ -34,9 +36,15 @@ fun TimeBlockScreen(){
                     } })
         }
     ) {paddingValues ->
+        val scope = rememberCoroutineScope()
         if (showAddTimeBlockDialog){
             addTimeBlock {
-                showAddTimeBlockDialog = false
+                scope.launch {
+                    timeBlocks = RemoteDataSource.getTimeBlocks()
+                    showAddTimeBlockDialog = false
+                }
+
+
             }
 
         }
@@ -69,8 +77,9 @@ fun addTimeBlock(onDismissRequest: () -> Unit){
     AlertDialog(
         onDismissRequest = onDismissRequest
         ){
-        Column {
-            Text(text = "添加时间段")
+        Column(
+            modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+        ) {
             TextField(
                 value = weekStart.toString(),
                 onValueChange = {
@@ -78,7 +87,8 @@ fun addTimeBlock(onDismissRequest: () -> Unit){
                 },
                 label = {
                     Text(text = "开始周")
-                }
+                },
+                modifier = Modifier.padding(8.dp)
             )
             TextField(
                 value = weekEnd.toString(),
@@ -87,7 +97,8 @@ fun addTimeBlock(onDismissRequest: () -> Unit){
                 },
                 label = {
                     Text(text = "结束周")
-                }
+                },
+                modifier = Modifier.padding(8.dp)
             )
             TextField(
                 value = dayOfWeek.toString(),
@@ -96,7 +107,8 @@ fun addTimeBlock(onDismissRequest: () -> Unit){
                 },
                 label = {
                     Text(text = "星期几")
-                }
+                },
+                modifier = Modifier.padding(8.dp)
             )
 
             TextField(
@@ -106,7 +118,8 @@ fun addTimeBlock(onDismissRequest: () -> Unit){
                 },
                 label = {
                     Text(text = "开始节")
-                }
+                },
+                modifier = Modifier.padding(8.dp)
             )
             TextField(
                 value = end.toString(),
@@ -115,20 +128,23 @@ fun addTimeBlock(onDismissRequest: () -> Unit){
                 },
                 label = {
                     Text(text = "结束节")
-                }
+                },
+                modifier = Modifier.padding(8.dp)
             )
-            }
-        val coroutine = rememberCoroutineScope()
+            val coroutine = rememberCoroutineScope()
             Button(
                 onClick = {
                     coroutine.launch {
                         RemoteDataSource.addTimeBlock(weekStart, weekEnd, dayOfWeek, start, end)
                         onDismissRequest.invoke()
                     }
-                }
+                },
+                modifier = Modifier.padding(8.dp)
             ) {
                 Text(text = "添加")
             }
+            }
+
     }
 }
 

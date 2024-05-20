@@ -22,7 +22,7 @@ private enum class TeachDetailState {
 @Composable
 fun TeacherDetail(
     id: Int,
-    onNavigateUp: () -> Unit
+    onNavigateUp: (() -> Unit)? = null
 ){
     var teacher by remember { mutableStateOf(TeacherDetail()) }
     var state by remember { mutableStateOf(TeachDetailState.Display) }
@@ -34,10 +34,12 @@ fun TeacherDetail(
             TopAppBar(
                 title = { Text(text = "Teacher Detail") },
                 navigationIcon = {
-                    IconButton(onClick = {
-                        onNavigateUp.invoke()
-                    }) {
-                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
+                    onNavigateUp?.let {
+                        IconButton(onClick = {
+                            onNavigateUp.invoke()
+                        }) {
+                            Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
+                        }
                     }
                 },
                 actions = {

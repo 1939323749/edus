@@ -20,4 +20,6 @@ enum class Screen {
     CourseManager,
     Location,
     TimeBlock,
+    Exam,
+    TeacherExam,
 }

@@ -2,11 +2,11 @@ package data.datasource
 
 import com.google.gson.Gson
 import data.model.classes.ClassByIdResp
-import data.model.courses.AllCourses
-import data.model.courses.CourseDetail
-import data.model.courses.StudentCourse
-import data.model.courses.UpdateCourse
+import data.model.courses.*
+import data.model.exam.AllExams
+import data.model.exam.ExamStudent
 import data.model.exam.StudentExam
+import data.model.exam.TeacherExam
 import data.model.getallclassresp.GetAllClassesResp
 import data.model.location.AllLocations
 import data.model.notice.Notice
@@ -170,6 +170,7 @@ object RemoteDataSource {
         return try {
             client.get("$BASEURL/loca").body()
         } catch (e: Exception) {
+            println(e)
             AllLocations()
         }
     }
@@ -322,6 +323,111 @@ object RemoteDataSource {
                 )
             ))
             contentType(ContentType.Application.Json)
+        }
+    }
+
+    suspend fun importCourse(row: Map<String, String>) {
+        try {
+            client.post("$BASEURL/course"){
+                setBody(gson.toJson(row))
+                contentType(ContentType.Application.Json)
+            }.bodyAsText().let {
+                println(it)
+            }
+        } catch (e: Exception) {
+            println(e)
+        }
+    }
+
+    suspend fun importClasses(row: Map<String, String>) {
+        try {
+            client.post("$BASEURL/class"){
+                setBody(gson.toJson(row))
+                contentType(ContentType.Application.Json)
+            }
+        } catch (e: Exception){
+            println(e)
+        }
+    }
+
+    suspend fun importLocations(row: Map<String, String>) {
+        try {
+            client.post("$BASEURL/loca"){
+                setBody(gson.toJson(row))
+                contentType(ContentType.Application.Json)
+            }
+        } catch (e: Exception){
+            println(e)
+        }
+    }
+
+    suspend fun deleteLocation(i: Int) {
+        if (i!=0){
+            try {
+                client.delete("$BASEURL/loca"){
+                    setBody(gson.toJson(mapOf(
+                        "id" to i
+                    )))
+                }.bodyAsText().let {
+                    println(it)
+                }
+            } catch (e: Exception){
+                println(e)
+            }
+        }
+    }
+
+    suspend fun getAllExams(): AllExams {
+        return try {
+            client.get("$BASEURL/exam").body<AllExams>().also { println(it) }
+        } catch (e: Exception){
+            println(e)
+            AllExams()
+        }
+    }
+
+    suspend fun getTeacherCourse(id: Int): TeacherCourse {
+        return try {
+            client.get("$BASEURL/teacher/$id/course").body()
+        } catch (e: Exception){
+            TeacherCourse()
+        }
+    }
+
+    suspend fun getTeacherExam(id: Int): TeacherExam {
+        return  try {
+            client.get("$BASEURL/teacher/$id/exam").body()
+        } catch (e: Exception){
+            println(e)
+            TeacherExam()
+        }
+    }
+
+    suspend fun getExamStudent(id: Int): ExamStudent {
+        return try {
+            println(id)
+            client.get("$BASEURL/exam/$id").body()
+        } catch (e: Exception){
+            println(e)
+            ExamStudent()
+        }
+    }
+
+    suspend fun importScore(examId: Int,row: Map<String, String>) {
+        try {
+            client.post("$BASEURL/score/$examId"){
+                setBody(gson.toJson(
+                    mapOf(
+                        "student_id" to row["student_id"]!!,
+                        "score" to row["score"]!!
+                    )
+                ))
+                contentType(ContentType.Application.Json)
+            }.bodyAsText().let {
+                println(it)
+            }
+        } catch (e: Exception){
+            println(e)
         }
     }
 }

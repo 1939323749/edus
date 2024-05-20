@@ -59,14 +59,14 @@ fun StudentDetail(
                 StudentDetailState.Display -> {
                     student.data?.let { data ->
                         Column {
-                            Text(text = "student", style = MaterialTheme.typography.titleLarge)
-                            Text(text = "name:" + data.name!!)
+                            Text(text = "学生", style = MaterialTheme.typography.titleLarge)
+                            Text(text = "姓名:" + data.name!!)
                             Text(text = "email:" + data.email!!)
-                            Text(text = "sex:" + data.sex!!)
+                            Text(text = "性别:" + data.sex!!)
                             Text(text = "id:" + data.id!!)
-                            Text(text = "enrolled time:" + data.enrolledTime!!)
-                            Text(text = "major:" + data.major?.name!!)
-                            Text(text = "department:" + data.major.departments?.first())
+                            Text(text = "入学时间:" + data.enrolledTime!!)
+                            Text(text = "专业:" + data.major?.name!!)
+                            Text(text = "学院/系:" + data.major.departments?.first()?.name)
                         }
                     }
                 }
